@@ -9,7 +9,6 @@ import pandas as pd
 import plotly.graph_objects as go
 
 RING_ORDER = ["< 5 km", "5-10 km", "10-15 km", "15-20 km", "> 20 km"]
-LATE_BINS = {"60-90", "90-120", "> 90"}
 CTE_MIDPOINTS = {
     "< 15": 12.5,
     "15-20": 17.5,
@@ -19,6 +18,22 @@ CTE_MIDPOINTS = {
     "60-90": 75.0,
     "90-120": 105.0,
     "> 90": 105.0,
+}
+CTE_UPPER_BOUNDS = {
+    "< 15": 15,
+    "15-20": 20,
+    "20-30": 30,
+    "30-45": 45,
+    "45-60": 60,
+    "60-90": 90,
+    "> 90": 120,
+}
+PROMISED_UPPER_BOUNDS = {
+    "< 30": 30,
+    "30-45": 45,
+    "45-60": 60,
+    "60-90": 90,
+    "> 90": 120,
 }
 RING_BOUNDS_KM = {
     "< 5 km": (0.0, 5.0),
@@ -74,6 +89,7 @@ def prepare_aggregates(df: pd.DataFrame) -> pd.DataFrame:
         "order_hour",
         "distance_to_kremlin_bin",
         "cte_bin",
+        "promised_time_bin",
     }
     missing = required_columns.difference(df.columns)
     if missing:
@@ -90,7 +106,9 @@ def prepare_aggregates(df: pd.DataFrame) -> pd.DataFrame:
     frame = frame[frame["distance_to_kremlin_bin"].isin(RING_ORDER)].copy()
     frame["delivery_time"] = frame["cte_bin"].map(CTE_MIDPOINTS)
     frame = frame.dropna(subset=["delivery_time"])
-    frame["is_late"] = frame["cte_bin"].isin(LATE_BINS).astype(float)
+    frame["cte_upper"] = frame["cte_bin"].map(CTE_UPPER_BOUNDS)
+    frame["promised_upper"] = frame["promised_time_bin"].map(PROMISED_UPPER_BOUNDS)
+    frame["is_late"] = (frame["cte_upper"] > frame["promised_upper"]).astype(float)
 
     grouped = (
         frame.groupby(["order_day_of_week", "order_hour", "distance_to_kremlin_bin"], as_index=False)

@@ -7,7 +7,7 @@ import { useStatsData } from "./hooks/useStatsData";
 const metricDetails = {
   lateRate: {
     title: "Процент опозданий",
-    caption: "Чем темнее кольцо, тем выше доля заказов с доставкой 60+ минут.",
+    caption: "Late means actual delivery time exceeded promised time.",
   },
   deliveryTime: {
     title: "Время доставки",
@@ -130,3 +130,4 @@ export default function App() {
     </main>
   );
 }
+

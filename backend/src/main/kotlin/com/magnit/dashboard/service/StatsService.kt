@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service
 @Service
 class StatsService {
     private val ringOrder = listOf("< 5 km", "5-10 km", "10-15 km", "15-20 km", "> 20 km")
-    private val lateBins = setOf("60-90", "90-120", "> 90")
     private val cteMidpoints = mapOf(
         "< 15" to 12.5,
         "15-20" to 17.5,
@@ -27,6 +26,22 @@ class StatsService {
         "60-90" to 75.0,
         "90-120" to 105.0,
         "> 90" to 105.0,
+    )
+    private val cteUpperBounds = mapOf(
+        "< 15" to 15,
+        "15-20" to 20,
+        "20-30" to 30,
+        "30-45" to 45,
+        "45-60" to 60,
+        "60-90" to 90,
+        "> 90" to 120,
+    )
+    private val promisedUpperBounds = mapOf(
+        "< 30" to 30,
+        "30-45" to 45,
+        "45-60" to 60,
+        "60-90" to 90,
+        "> 90" to 120,
     )
 
     @Volatile
@@ -58,6 +73,7 @@ class StatsService {
             val hourIndex = requireIndex(indexMap, "order_hour")
             val distanceIndex = requireIndex(indexMap, "distance_to_kremlin_bin")
             val cteIndex = requireIndex(indexMap, "cte_bin")
+            val promisedIndex = requireIndex(indexMap, "promised_time_bin")
 
             while (iterator.hasNext()) {
                 val line = iterator.next()
@@ -68,6 +84,7 @@ class StatsService {
                 val row = parseCsvLine(line)
                 val distanceRing = row.getOrNull(distanceIndex)?.trim().orEmpty()
                 val cteBin = row.getOrNull(cteIndex)?.trim().orEmpty()
+                val promisedBin = row.getOrNull(promisedIndex)?.trim().orEmpty()
                 val day = row.getOrNull(dayIndex)?.trim()?.toIntOrNull()
                 val hour = row.getOrNull(hourIndex)?.trim()?.toIntOrNull()
                 val deliveryTime = cteMidpoints[cteBin]
@@ -80,7 +97,7 @@ class StatsService {
                 val ringBuckets = timeBuckets.getOrPut(timeKey) { linkedMapOf() }
                 val bucket = ringBuckets.getOrPut(distanceRing) { AggregateBucket() }
                 bucket.add(
-                    isLate = cteBin in lateBins,
+                    isLate = isLateByPromise(cteBin = cteBin, promisedBin = promisedBin),
                     deliveryTime = deliveryTime,
                 )
             }
@@ -118,9 +135,9 @@ class StatsService {
                 MetricDefinition(
                     id = "lateRate",
                     label = "Опоздания",
-                    description = "Доля заказов с временем доставки 60+ минут.",
+                    description = "Share of orders where actual delivery time exceeded promised time.",
                     minValue = 0.0,
-                    maxValue = lateMax,
+                    maxValue = 40.0,
                     unit = "%",
                     colorScale = listOf("#fff4e6", "#ffbf69", "#ff7b54", "#d7263d"),
                 ),
@@ -227,6 +244,12 @@ class StatsService {
         return checkNotNull(indexMap[field]) { "CSV column `$field` was not found" }
     }
 
+    private fun isLateByPromise(cteBin: String, promisedBin: String): Boolean {
+        val cteUpper = cteUpperBounds[cteBin]
+        val promisedUpper = promisedUpperBounds[promisedBin]
+        return cteUpper != null && promisedUpper != null && cteUpper > promisedUpper
+    }
+
     private fun roundTo(value: Double): Double = round(value * 10.0) / 10.0
 
     private data class TimeKey(
@@ -253,3 +276,4 @@ class StatsService {
         fun avgDeliveryTime(): Double = if (orderCount == 0) 0.0 else deliveryTimeSum / orderCount
     }
 }
+
