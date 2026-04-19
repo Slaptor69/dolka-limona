@@ -159,9 +159,9 @@ export function CircularChart({ geoJson, rings, timeFrame, metric }) {
             hovertemplate:
               "<b>%{customdata[0]}</b><br>" +
               `${metric.label}: %{customdata[4]} ${metric.unit}<br>` +
-              "РћРїРѕР·РґР°РЅРёСЏ: %{customdata[1]} %<br>" +
-              "Р’СЂРµРјСЏ РґРѕСЃС‚Р°РІРєРё: %{customdata[2]} РјРёРЅ<br>" +
-              "Р—Р°РєР°Р·РѕРІ: %{customdata[3]}<extra></extra>",
+              "Опоздания: %{customdata[1]} %<br>" +
+              "Время доставки: %{customdata[2]} мин<br>" +
+              "Заказов: %{customdata[3]}<extra></extra>",
           },
         ]}
         layout={{

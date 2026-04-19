@@ -55,9 +55,7 @@ export default function App() {
   const safeFrameIndex = Math.min(selectedFrameIndex, Math.max(data.timeFrames.length - 1, 0));
   const currentFrame = data.timeFrames[safeFrameIndex];
   const metrics = data.metrics.map((metric) =>
-    metric.id === "orderCount"
-      ? { ...metric, label: "Количество заказов" }
-      : metric,
+    metric.id === "orderCount" ? { ...metric, label: "Количество заказов" } : metric,
   );
   const currentMetric = metrics.find((metric) => metric.id === selectedMetric) ?? metrics[0];
 
