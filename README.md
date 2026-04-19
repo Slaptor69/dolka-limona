@@ -2,37 +2,115 @@
 
 Веб-приложение для визуализации заказов "Магнит" по временным срезам и кольцам вокруг Кремля.
 
-Стек:
-- `backend`: Kotlin + Spring Boot + Gradle
-- `frontend`: React + Vite + Plotly
-- `infra`: Docker Compose
+## Что внутри
 
-Что умеет:
-- показывает одну карту-график по кольцам Москвы;
-- меняет срез по ползунку времени `день + час`;
-- переключает режим визуализации:
+- `backend` — Kotlin, Spring Boot, Gradle
+- `frontend` — React, Vite, Plotly, Nginx
+- `docker-compose.yml` — локальный запуск через Docker Compose
+- `docker-compose.prod.yml` — production-запуск с доменом и HTTPS через Caddy
+
+## Что умеет сайт
+
+- показывает кольцевую инфографику по Москве;
+- переключает временной срез по дням недели и часам;
+- меняет режим отображения:
   - процент опозданий;
-  - среднее время доставки;
+  - время доставки;
   - количество заказов.
 
-Запуск через Docker:
+## Локальный запуск через Docker
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
 После запуска:
-- фронтенд: `http://localhost:8080`
-- backend API: `http://localhost:8081/api/stats/overview`
 
-Локальная разработка:
+- сайт: [http://localhost:8080](http://localhost:8080)
+- API: [http://localhost:8081/api/stats/overview](http://localhost:8081/api/stats/overview)
 
-1. Для backend нужен установленный `Gradle` и `Java 17`.
-2. Для frontend нужен `Node.js`.
-3. CSV уже лежит в `backend/src/main/resources/data/magnit_data.csv`.
+## Как открыть сайт "онлайн" как обычный веб-сайт
+
+Текущий `docker compose` уже собирает рабочее приложение, но оно доступно только локально на вашем компьютере.
+Чтобы сайт работал в интернете как нормальный веб-сайт, нужен сервер с публичным IP и домен.
+
+### Рекомендуемый вариант
+
+1. Возьмите VPS или облачный сервер с Linux.
+2. Привяжите домен к IP сервера через DNS.
+3. Установите на сервер Docker и Docker Compose.
+4. Склонируйте репозиторий на сервер.
+5. В файле `Caddyfile` замените `example.com` на ваш домен.
+6. Запустите production-конфиг:
+
+```bash
+docker compose -f docker-compose.prod.yml up --build -d
+```
+
+После этого:
+
+- сайт будет открываться по `https://ваш-домен`
+- HTTPS-сертификат Caddy получит автоматически
+- backend не будет торчать наружу отдельным портом
+
+## Production-конфигурация
+
+В production-схеме:
+
+- `frontend` обслуживает React-приложение;
+- `frontend` проксирует `/api/*` во внутренний `backend`;
+- `caddy` принимает внешний трафик на `80/443` и выдает HTTPS.
+
+Это безопаснее и ближе к нормальной схеме публичного сайта, чем просто открывать `8080` и `8081` наружу.
+
+## Локальная разработка без Docker
+
+### Backend
+
+Нужно:
+
+- Java 17
+- Gradle
+
+Запуск:
+
+```bash
+cd backend
+gradle bootRun
+```
+
+Backend поднимется на `http://localhost:8080`.
+
+### Frontend
+
+Нужно:
+
+- Node.js 20+
+
+Запуск:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Vite поднимет dev-сервер, но для полнофункционального режима удобнее использовать Docker Compose, потому что там уже настроен прокси на backend.
+
+## Данные
+
+CSV лежит здесь:
+
+- [magnit_data.csv](C:/Users/User/Dev/dolka-limona/backend/src/main/resources/data/magnit_data.csv)
 
 Основной endpoint:
 
 ```text
 GET /api/stats/overview
 ```
+
+## Полезно знать
+
+- На локальной машине сайт уже работает как веб-приложение по `http://localhost:8080`.
+- Для публикации на GitHub Pages этот проект в текущем виде не подходит, потому что у него есть backend API.
+- Если нужен быстрый временный внешний доступ без сервера, можно использовать tunnel-сервисы вроде Cloudflare Tunnel или ngrok, но для нормального постоянного сайта лучше VPS + домен.
