@@ -1,5 +1,5 @@
 import { useState } from "react";
-import magnitOmniLogo from "./assets/magnit-omni-logo.svg";
+import magnitLogoMark from "./assets/magnit-omni-logo.svg";
 import { CircularChart } from "./components/CircularChart";
 import { MetricToggle } from "./components/MetricToggle";
 import { TimeSlider } from "./components/TimeSlider";
@@ -66,8 +66,14 @@ export default function App() {
       <div className="deck-surface">
         <section className="hero-card">
           <div className="hero-copy">
-            <img className="hero-logo" src={magnitOmniLogo} alt="MAGNIT OMNI" />
-            <p className="hero-kicker">инфографика доставки</p>
+            <div className="hero-brand" aria-label="MAGNIT OMNI">
+              <img className="hero-logo-mark" src={magnitLogoMark} alt="Логотип Магнит" />
+              <div className="hero-brand-text">
+                <span>MAGNIT</span>
+                <span>OMNI</span>
+              </div>
+            </div>
+            <p className="hero-kicker">ИНФОГРАФИКА ДОСТАВКИ</p>
           </div>
         </section>
 

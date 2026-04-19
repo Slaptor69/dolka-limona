@@ -1,16 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1261 295" role="img" aria-labelledby="title">
-  <title>MAGNIT OMNI</title>
-  <rect width="1261" height="295" fill="#0b262d"/>
-  <g fill="#f4f1ef">
-    <path d="M40 18h262v38H85c-24 0-43 19-43 43v113c0 24-18 43-41 43H0V98c0-44 36-80 80-80Z"/>
-    <path d="M0 255h42c24 0 43-19 43-43V93h173v40H128v103H88V173H42v74c0 24 19 43 43 43h172v5H0v-40Z"/>
-    <path d="M331 17h92l57 77 57-77h92v143h-60V75l-63 82h-23l-62-81v84h-60V17Z"/>
-    <path d="M684 17h72l95 143h-69l-14-24h-98l-14 24h-67l95-143Zm35 41-28 46h56l-28-46Z"/>
-    <path d="M867 17h63v143h-63V17Z"/>
-    <path d="M948 17h61l105 89V17h62v143h-61l-105-89v89h-62V17Z"/>
-    <path d="M332 180h93l55 74 55-74h92v98h-60v-43l-50 43h-74l-51-43v43h-60v-98Z"/>
-    <path d="M685 180h72l95 98h-69l-14-16h-98l-14 16h-67l95-98Zm35 33-28 29h56l-28-29Z"/>
-    <path d="M867 180h63v98h-63v-98Z"/>
-    <path d="M948 180h61l105 60v-60h62v98h-62l-105-60v60h-61v-98Z"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 476 452" role="img" aria-labelledby="title">
+  <title>Логотип Магнит</title>
+  <rect width="476" height="452" fill="#0b262d"/>
+  <path
+    fill="#f4f1ef"
+    d="M24 24h432v61H104c-43.08 0-78 34.92-78 78v148c0 38.66-27.31 70.94-63.7 78.6L0 393V102C0 58.92 34.92 24 78 24h-54Zm119 96h188v62H215v165h-72V120Zm193 0h72v228h-72V120ZM0 389h77c43.08 0 78-34.92 78-78V146h224v64H208v116c0 34.24-27.76 62-62 62H0v1Zm0 0"
+  />
 </svg>

@@ -136,10 +136,29 @@ input {
   line-height: 1.58;
 }
 
-.hero-logo {
+.hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.hero-logo-mark {
   display: block;
-  width: min(100%, 760px);
+  width: min(24vw, 180px);
+  min-width: 96px;
   height: auto;
+  flex: 0 0 auto;
+}
+
+.hero-brand-text {
+  display: flex;
+  flex-direction: column;
+  font-family: "Bahnschrift", "Arial Black", sans-serif;
+  font-size: clamp(2.7rem, 8vw, 6.5rem);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 .hero-kicker {
@@ -352,6 +371,20 @@ input {
   .slider-header h2,
   .state-card h1 {
     font-size: clamp(2.4rem, 12vw, 4rem);
+  }
+
+  .hero-brand {
+    gap: 14px;
+    align-items: flex-end;
+  }
+
+  .hero-logo-mark {
+    width: min(30vw, 118px);
+    min-width: 78px;
+  }
+
+  .hero-brand-text {
+    font-size: clamp(2.1rem, 10vw, 3.5rem);
   }
 
   .control-panel,
